@@ -1,49 +1,30 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Text))]
 public class Dialog : MonoBehaviour
 {
+	private UnityAction dialogListener;
 	private Text _textComponent;
-
 	public string[] DialogueStrings;
-
 	public float SecondsBetweenCharacters = 0.15f;
 	public float CharacterRateMultiplier = 0.5f;
-
 	public KeyCode DialogueInput = KeyCode.Return;
-
 	private bool _isStringBeingRevealed = false;
 	private bool _isDialoguePlaying = false;
 	private bool _isEndOfDialogue = false;
-
 	public GameObject ContinueIcon;
 	public GameObject StopIcon;
 
-	void OnEnable()
-    {
-        //EventManager.OnStart += Display;
-    }
-    
-    
-    void OnDisable()
-    {
-     //   EventManager.OnStart -= Display;
-    }
 
-
-
-	// Use this for initialization
-	void Display ()
+	void Start ()
 	{
-		Debug.Log("Display");
+	    _textComponent = GetComponent<Text>();
+	    _textComponent.text = "";
 
-		this.transform.parent.gameObject.SetActive(true);
-		_textComponent = GetComponent<Text>();
-		_textComponent.text = "";
-
-		HideIcons();
+        HideIcons();
 	}
 
 	// Update is called once per frame
@@ -155,10 +136,13 @@ public class Dialog : MonoBehaviour
 	{
 		if (_isEndOfDialogue)
 		{
+			Debug.Log("end dialog");
 			StopIcon.SetActive(true);
+			EventManager.TriggerEvent ("endDialog");
 			return;
+			
 		}
-
+		Debug.Log("continue icon");
 		ContinueIcon.SetActive(true);
 	}
 }
