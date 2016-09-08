@@ -21,9 +21,25 @@ public class Dialog : MonoBehaviour
 	public GameObject ContinueIcon;
 	public GameObject StopIcon;
 
+	void OnEnable()
+    {
+        //EventManager.OnStart += Display;
+    }
+    
+    
+    void OnDisable()
+    {
+     //   EventManager.OnStart -= Display;
+    }
+
+
+
 	// Use this for initialization
-	void Start ()
+	void Display ()
 	{
+		Debug.Log("Display");
+
+		this.transform.parent.gameObject.SetActive(true);
 		_textComponent = GetComponent<Text>();
 		_textComponent.text = "";
 
