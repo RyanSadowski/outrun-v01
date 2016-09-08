@@ -2,47 +2,21 @@
 using System.Collections;
 
 public class CharacterMovement : MonoBehaviour {
-
-	Rigidbody rigidbody3D;
-	public float speed = 4;
-	public float jump = 0f;
-	private float vertMove = 0f;
-
-	void Start () 
-	{
-		
-		rigidbody3D = GetComponent<Rigidbody>();
-
-	}
-
-	void FixedUpdate () 
-	{
-		vertMove = 0;	
-
-		// Checks for user inputs.
-		float horizontal = Input.GetAxis("Horizontal");
-		if (Input.GetKeyDown ("space")) {
-			
-			vertMove = jump;
+	public float speed = 6.0F;
+	public float jumpSpeed = 8.0F;
+	public float gravity = 20.0F;
+	private Vector3 moveDirection = Vector3.zero;
+	void Update() {
+		CharacterController controller = GetComponent<CharacterController>();
+		if (controller.isGrounded) {
+			moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, 0);
+			moveDirection = transform.TransformDirection(moveDirection);
+			moveDirection *= speed;
+			if (Input.GetButton("Jump"))
+				moveDirection.y = jumpSpeed;
 
 		}
-
-
-
-		Vector3 movement = new Vector3(horizontal, vertMove, 0);
-
-		// Makes the player move.
-		rigidbody3D.AddForce(movement * speed / Time.deltaTime);
-
-
-		// Limits the speed of the rigidbody.
-		if (rigidbody3D.velocity.magnitude > speed)
-		{
-			rigidbody3D.velocity = rigidbody3D.velocity.normalized * speed;
-		}
-
-
-
-
+		moveDirection.y -= gravity * Time.deltaTime;
+		controller.Move(moveDirection * Time.deltaTime);
 	}
 }
